@@ -1,16 +1,22 @@
 package com.chess;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
+    private static final int backX = Gdx.graphics.getWidth()-50, backY = Gdx.graphics.getHeight()-50;
+    Texture back;
     final Chess game;
     OrthographicCamera camera;
     public GameScreen(final Chess game) {
         this.game = game;
         camera = new OrthographicCamera();
-        camera.setToOrtho(false,480, 480);
+        camera.setToOrtho(false,960, 960);
+
+        back = new Texture("back.png");
     }
 
     @Override
@@ -23,6 +29,10 @@ public class GameScreen implements Screen {
         ScreenUtils.clear(0.05f,0,0.1f,0.5f);
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
+
+        game.batch.begin();
+        game.batch.draw(back,backX,backY);
+        game.batch.end();
     }
 
     @Override
