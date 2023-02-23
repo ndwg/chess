@@ -7,7 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainMenuScreen implements Screen {
-    private static final int buttonHeight = 25, buttonWidth = 148, buttonX = (Gdx.graphics.getWidth()/2)-(buttonWidth/2),playButtonY = 300, exitButtonY = 260;
+    private static final int buttonHeight = 25, buttonWidth = 148, playButtonX = (Gdx.graphics.getWidth()/2)-(201/2), exitButtonX = (Gdx.graphics.getWidth()/2)-(184/2),playButtonY = 300, exitButtonY = 260;
     Texture playButtonActive, playButtonInactive, exitButtonActive, exitButtonInactive,title;
     final Chess game;
     OrthographicCamera camera;
@@ -37,32 +37,32 @@ public class MainMenuScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+
+        //render title
         game.batch.draw(title,(Gdx.graphics.getWidth()/2)-396,500);
 
-        if(Gdx.input.getX() > buttonX && Gdx.input.getX() < buttonX + buttonWidth){
-            if(Gdx.graphics.getHeight()-Gdx.input.getY() > playButtonY && Gdx.graphics.getHeight()-Gdx.input.getY() < playButtonY + buttonHeight){
-                game.batch.draw(playButtonActive,buttonX,playButtonY);
-                if(Gdx.input.isTouched()){
-                    game.setScreen(new GameScreen(game));
-                    dispose();
-                }
-            }
-            else{
-                game.batch.draw(playButtonInactive,buttonX,playButtonY);
-            }
-            if(Gdx.graphics.getHeight()-Gdx.input.getY() > exitButtonY && Gdx.graphics.getHeight()-Gdx.input.getY() < exitButtonY + buttonHeight){
-                game.batch.draw(exitButtonActive,buttonX,exitButtonY);
-                if(Gdx.input.isTouched()){
-                    Gdx.app.exit();
-                }
-            }
-            else{
-                game.batch.draw(exitButtonInactive,buttonX,exitButtonY);
+        //render buttons
+        if(Gdx.input.getX() > playButtonX && Gdx.input.getX() < playButtonX + playButtonInactive.getWidth() &&
+                Gdx.graphics.getHeight()-Gdx.input.getY() > playButtonY && Gdx.graphics.getHeight()-Gdx.input.getY() < playButtonY + playButtonInactive.getHeight()){
+            game.batch.draw(playButtonActive,playButtonX,playButtonY);
+            if(Gdx.input.isTouched()){
+                game.setScreen(new GameScreen(game));
+                dispose();
             }
         }
         else{
-            game.batch.draw(playButtonInactive,buttonX,playButtonY);
-            game.batch.draw(exitButtonInactive,buttonX,exitButtonY);
+            game.batch.draw(playButtonInactive,playButtonX,playButtonY);
+        }
+
+        if(Gdx.input.getX() > exitButtonX && Gdx.input.getX() < exitButtonX + exitButtonInactive.getWidth() &&
+                Gdx.graphics.getHeight()-Gdx.input.getY() > exitButtonY && Gdx.graphics.getHeight()-Gdx.input.getY() < exitButtonY + exitButtonInactive.getHeight()){
+            game.batch.draw(exitButtonActive,exitButtonX,exitButtonY);
+            if(Gdx.input.isTouched()){
+                Gdx.app.exit();
+            }
+        }
+        else{
+            game.batch.draw(exitButtonInactive,exitButtonX,exitButtonY);
         }
 
         game.batch.end();
