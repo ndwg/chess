@@ -7,9 +7,11 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 public class GameScreen implements Screen {
-    private static final int backX = Gdx.graphics.getWidth()-50, backY = Gdx.graphics.getHeight()-50;
+    private static final int backX = Gdx.graphics.getWidth()-50, backY = Gdx.graphics.getHeight()-50, backLength = 25;
     Texture back;
     final Chess game;
+
+    Board chessboard = new Board();
     OrthographicCamera camera;
     public GameScreen(final Chess game) {
         this.game = game;
@@ -31,7 +33,13 @@ public class GameScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         game.batch.begin();
+
+        //render back button
         game.batch.draw(back,backX,backY);
+        if(Gdx.input.getX() > backX && Gdx.input.getX() < backX + backLength && Gdx.graphics.getHeight() - Gdx.input.getY() > backY && Gdx.graphics.getHeight() - Gdx.input.getY() < backY + backLength && Gdx.input.isTouched()) {
+            game.setScreen(new MainMenuScreen(game));
+            dispose();
+        }
         game.batch.end();
     }
 
