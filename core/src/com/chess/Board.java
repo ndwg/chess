@@ -1,13 +1,17 @@
 package com.chess;
 
+import java.awt.*;
+
 public class Board {
     private int[][] gameBoard;
+    private Point selectedTile;
     public Board(){
         setBoard();
     }
 
     public void setBoard(){
         gameBoard = new int[8][8];
+        selectedTile = new Point(1000,1000);
 
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -34,6 +38,15 @@ public class Board {
 
     public int getTile(int row, int col){
         return gameBoard[row][col];
+    }
+
+    public void selectTile(int row, int col){
+        if(row == selectedTile.getX() && col == selectedTile.getY()) selectedTile.setLocation(1000,1000);
+        else selectedTile.setLocation(row,col);
+    }
+
+    public Point getSelectedTile(){
+        return selectedTile;
     }
 
     //public void updateBoard(){}

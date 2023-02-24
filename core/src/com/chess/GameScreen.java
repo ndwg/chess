@@ -5,12 +5,17 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
+
+import java.awt.*;
 
 public class GameScreen implements Screen {
     private static final int backX = Gdx.graphics.getWidth()-50, backY = Gdx.graphics.getHeight()-50, backLength = 25;
     private static final int boardLength = 800, boardX = (Gdx.graphics.getWidth()/2)-400, boardY = (Gdx.graphics.getHeight()/2)-400;
     private static final int tileLength = 100, initialTileX = boardX-100, initialTileY = boardY+800;
-    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage;
+    private static long startUpTime;
+    Point selectedTile;
+    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage;
     final Chess game;
     Board chessboard = new Board();
     OrthographicCamera camera;
@@ -33,6 +38,9 @@ public class GameScreen implements Screen {
         blackRookImage = new Texture("black_rook.png");
         blackQueenImage = new Texture("black_queen.png");
         blackKingImage = new Texture("black_king.png");
+        selectedTileImage = new Texture("selected_tile.png");
+
+        startUpTime = TimeUtils.nanoTime();
     }
 
     @Override
@@ -57,6 +65,10 @@ public class GameScreen implements Screen {
 
         //render chess board
         game.batch.draw(boardImage,boardX,boardY);
+
+        //render tile selection
+        selectedTile = chessboard.getSelectedTile();
+        game.batch.draw(selectedTileImage, (float) (selectedTile.getX()*100)+boardX, (float) (selectedTile.getY()*100)+boardX);
 
         //render chess pieces
         int tileX = initialTileX, tileY = initialTileY;
@@ -134,6 +146,16 @@ public class GameScreen implements Screen {
             }
 
             tileX = initialTileX;
+        }
+
+        //handle user input on board
+        if(Gdx.input.getX() > boardX && Gdx.input.getX() < boardX + boardLength && Gdx.input.getY() > boardY && Gdx.input.getY() < boardY + boardLength && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 500000000){
+            startUpTime = TimeUtils.nanoTime();
+
+            int selectX = (Gdx.input.getX()-boardX)/100;
+            int selectY = 7-((Gdx.input.getY()-boardY)/100);
+
+            chessboard.selectTile(selectX,selectY);
         }
 
         game.batch.end();
