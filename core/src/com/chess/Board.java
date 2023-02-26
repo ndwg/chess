@@ -41,7 +41,8 @@ public class Board {
     }
 
     public void selectTile(int row, int col){
-        if(row == selectedTile.getX() && col == selectedTile.getY()) selectedTile.setLocation(1000,1000);
+        if(row == selectedTile.x && col == selectedTile.y) selectedTile.setLocation(1000,1000);
+        else if(selectedTile.x != 1000 && gameBoard[selectedTile.x][selectedTile.y] != 0) updateBoard(row,col);
         else selectedTile.setLocation(row,col);
     }
 
@@ -49,5 +50,30 @@ public class Board {
         return selectedTile;
     }
 
-    //public void updateBoard(){}
+    public void updateBoard(int row, int col){
+        boolean updateApproved = false;
+        int tileID;
+
+        if(gameBoard[selectedTile.x][selectedTile.y] > 20) tileID = gameBoard[selectedTile.x][selectedTile.y]%20;
+        else tileID = gameBoard[selectedTile.x][selectedTile.y]%10;
+
+        switch(tileID) {
+            case 1:
+                updateApproved = isValidMovePawn(row,col);
+                break;
+            case 2:
+                break;
+        }
+
+        if(updateApproved){
+            gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
+            gameBoard[selectedTile.x][selectedTile.y] = 0;
+            selectedTile.setLocation(1000,1000);
+        }
+        else selectedTile.setLocation(row,col);
+    }
+
+    public boolean isValidMovePawn(int row, int col){
+        return true;
+    }
 }

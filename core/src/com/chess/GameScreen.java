@@ -68,7 +68,7 @@ public class GameScreen implements Screen {
 
         //render tile selection
         selectedTile = chessboard.getSelectedTile();
-        game.batch.draw(selectedTileImage, (float) (selectedTile.getX()*100)+boardX, (float) (selectedTile.getY()*100)+boardX);
+        if(selectedTile.y != 1000) game.batch.draw(selectedTileImage, (selectedTile.y*100)+boardX,boardLength+boardY-(selectedTile.x*100)-100);
 
         //render chess pieces
         int tileX = initialTileX, tileY = initialTileY;
@@ -149,13 +149,13 @@ public class GameScreen implements Screen {
         }
 
         //handle user input on board
-        if(Gdx.input.getX() > boardX && Gdx.input.getX() < boardX + boardLength && Gdx.input.getY() > boardY && Gdx.input.getY() < boardY + boardLength && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 500000000){
+        if(Gdx.input.getX() > boardX && Gdx.input.getX() < boardX + boardLength && Gdx.input.getY() > boardY && Gdx.input.getY() < boardY + boardLength && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000){
             startUpTime = TimeUtils.nanoTime();
 
             int selectX = (Gdx.input.getX()-boardX)/100;
-            int selectY = 7-((Gdx.input.getY()-boardY)/100);
+            int selectY = 7-((boardLength+boardY-Gdx.input.getY())/100);
 
-            chessboard.selectTile(selectX,selectY);
+            chessboard.selectTile(selectY,selectX);
         }
 
         game.batch.end();
