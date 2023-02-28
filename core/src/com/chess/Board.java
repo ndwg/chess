@@ -50,7 +50,7 @@ public class Board {
         return selectedTile;
     }
 
-    public void updateBoard(int row, int col){
+    private void updateBoard(int row, int col){
         boolean updateApproved = false;
         int tileID;
 
@@ -62,6 +62,7 @@ public class Board {
                 updateApproved = isValidMovePawn(row,col);
                 break;
             case 2:
+                updateApproved = isValidMoveKnight(row,col);
                 break;
         }
 
@@ -73,7 +74,36 @@ public class Board {
         else selectedTile.setLocation(row,col);
     }
 
-    public boolean isValidMovePawn(int row, int col){
-        return true;
+    private boolean isValidMovePawn(int row, int col){
+        if(gameBoard[selectedTile.x][selectedTile.y] > 20){
+            if(row == selectedTile.x-1 && col == selectedTile.y && gameBoard[row][col] == 0) return true;
+            else if((col == selectedTile.y+1 || col == selectedTile.y-1) && row == selectedTile.x-1 && 0 < gameBoard[row][col] && gameBoard[row][col] < 20) return true;
+        }
+        else{
+            if(row == selectedTile.x+1 && col == selectedTile.y && gameBoard[row][col] == 0) return true;
+            else if((col == selectedTile.y+1 || col == selectedTile.y-1) && row == selectedTile.x+1 && gameBoard[row][col] > 20) return true;
+        }
+
+        return false;
+    }
+
+    private boolean isValidMoveKnight(int row, int col){
+        if(gameBoard[selectedTile.x][selectedTile.y] > 20){
+            if(((row == selectedTile.x-2 && Math.abs(col-selectedTile.y) == 1)
+                    || (row == selectedTile.x-1 && Math.abs(col-selectedTile.y) == 2)
+                    || (row == selectedTile.x+1 && Math.abs(col-selectedTile.y) == 2)
+                    || (row == selectedTile.x+2 && Math.abs(col-selectedTile.y) == 1))
+                    && gameBoard[row][col] < 20)
+                return true;
+        }
+        else{
+            if(((row == selectedTile.x-2 && Math.abs(col-selectedTile.y) == 1)
+                    || (row == selectedTile.x-1 && Math.abs(col-selectedTile.y) == 2)
+                    || (row == selectedTile.x+1 && Math.abs(col-selectedTile.y) == 2)
+                    || (row == selectedTile.x+2 && Math.abs(col-selectedTile.y) == 1))
+                    && (gameBoard[row][col] == 0 || gameBoard[row][col] > 20))
+                return true;
+        }
+        return false;
     }
 }
