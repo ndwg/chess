@@ -64,6 +64,9 @@ public class Board {
             case 2:
                 updateApproved = isValidMoveKnight(row,col);
                 break;
+            case 3:
+                updateApproved = isValidMoveBishop(row,col);
+                break;
         }
 
         if(updateApproved){
@@ -103,6 +106,52 @@ public class Board {
                     || (row == selectedTile.x+2 && Math.abs(col-selectedTile.y) == 1))
                     && (gameBoard[row][col] == 0 || gameBoard[row][col] > 20))
                 return true;
+        }
+        return false;
+    }
+
+    private boolean isValidMoveBishop(int row, int col){
+        if(gameBoard[selectedTile.x][selectedTile.y] > 20){
+            if(Math.abs(row-selectedTile.x)==Math.abs(col-selectedTile.y)
+                    && gameBoard[row][col] < 20) {
+                if(row < selectedTile.x) row++;
+                else row--;
+
+                if(col < selectedTile.y) col++;
+                else col--;
+
+                while(row != selectedTile.x){
+                    if(gameBoard[row][col] != 0) return false;
+
+                    if(row < selectedTile.x) row++;
+                    else row--;
+
+                    if(col < selectedTile.y) col++;
+                    else col--;
+                }
+                return true;
+            }
+        }
+        else{
+            if(Math.abs(row-selectedTile.x)==Math.abs(col-selectedTile.y)
+                    && (gameBoard[row][col] > 20 || gameBoard[row][col] == 0)) {
+                if(row < selectedTile.x) row++;
+                else row--;
+
+                if(col < selectedTile.y) col++;
+                else col--;
+
+                while(row != selectedTile.x){
+                    if(gameBoard[row][col] != 0) return false;
+
+                    if(row < selectedTile.x) row++;
+                    else row--;
+
+                    if(col < selectedTile.y) col++;
+                    else col--;
+                }
+                return true;
+            }
         }
         return false;
     }
