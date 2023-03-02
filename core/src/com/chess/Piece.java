@@ -19,7 +19,7 @@ public class Piece {
         return pieceID;
     }
 
-    public boolean isValidMove(int row, int col, Piece piece, Point tile, Piece[][] gameBoard){
+    public boolean isValidMove(int row, int col, Piece piece, Board board){
         return false;
     }
 }

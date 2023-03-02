@@ -5,14 +5,15 @@ import java.awt.*;
 public class Board {
     private Piece[][] gameBoard;
     private Point selectedTile;
+    private Move lastMove;
     public Board(){
+        gameBoard = new Piece[8][8];
+        selectedTile = new Point(1000,1000);
+        lastMove = new Move(null,0,0);
         setBoard();
     }
 
     public void setBoard(){
-        gameBoard = new Piece[8][8];
-        selectedTile = new Point(1000,1000);
-
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 if(i == 0){
@@ -36,6 +37,10 @@ public class Board {
         }
     }
 
+    public Piece[][] getGameBoard(){
+        return gameBoard;
+    }
+
     public Piece getTile(int row, int col){
         return gameBoard[row][col];
     }
@@ -50,17 +55,27 @@ public class Board {
         return selectedTile;
     }
 
+    public Move getLastMove() {
+        return lastMove;
+    }
+
     private void updateBoard(int row, int col){
         boolean updateApproved;
         Piece p = getTile(selectedTile.x,selectedTile.y);
 
-        updateApproved = p.isValidMove(row,col,p,selectedTile,gameBoard);
+        updateApproved = p.isValidMove(row,col,p,this);
 
         if(updateApproved){
+            lastMove = new Move(p,Math.abs(row-selectedTile.x),Math.abs(col-selectedTile.y));
+
             gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
             gameBoard[selectedTile.x][selectedTile.y] = null;
             selectedTile.setLocation(1000,1000);
         }
         else selectedTile.setLocation(row,col);
+    }
+
+    public void enPassantCleanUp(int row, int col){
+        gameBoard[row][col] = null;
     }
 }

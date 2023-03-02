@@ -3,14 +3,16 @@ package com.chess;
 import java.awt.*;
 
 public class Knight extends Piece{
-    private int pieceID = 2;
 
     public Knight(int player) {
         super(player,2);
     }
 
     @Override
-    public boolean isValidMove(int row, int col, Piece piece, Point selectedTile, Piece[][] gameBoard){
+    public boolean isValidMove(int row, int col, Piece piece, Board board){
+        Piece[][] gameBoard = board.getGameBoard();
+        Point selectedTile = board.getSelectedTile();
+
         if(piece.getPlayerID()==2){
             if(((row == selectedTile.x-2 && Math.abs(col-selectedTile.y) == 1)
                     || (row == selectedTile.x-1 && Math.abs(col-selectedTile.y) == 2)
