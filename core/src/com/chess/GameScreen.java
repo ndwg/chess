@@ -77,62 +77,67 @@ public class GameScreen implements Screen {
 
             for(int col = 0; col < 8; col++) {
                 tileX += 100;
-                int tileID = chessboard.getTile(row,col);
+                Piece p = chessboard.getTile(row,col);
 
-                if(tileID < 20){
-                    if(tileID % 10 == 1){
+                if(p == null) continue;
+
+                int pPieceID = p.getPieceID();
+                int pPlayerID = p.getPlayerID();
+
+                if(pPlayerID == 1){
+                    if(pPieceID == 1){
                         int adjustedTileX = tileX+(tileLength/2)-(whitePawnImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whitePawnImage.getHeight()/2);
                         game.batch.draw(whitePawnImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 10 == 2){
+                    else if(pPieceID == 2){
                         int adjustedTileX = tileX+(tileLength/2)-(whiteKnightImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whiteKnightImage.getHeight()/2);
                         game.batch.draw(whiteKnightImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 10 == 3){
+                    else if(pPieceID == 3){
                         int adjustedTileX = tileX+(tileLength/2)-(whiteBishopImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whiteBishopImage.getHeight()/2);
                         game.batch.draw(whiteBishopImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 10 == 4){
+                    else if(pPieceID == 4){
                         int adjustedTileX = tileX+(tileLength/2)-(whiteRookImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whiteRookImage.getHeight()/2);
                         game.batch.draw(whiteRookImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 10 == 5){
+                    else if(pPieceID == 5){
                         int adjustedTileX = tileX+(tileLength/2)-(whiteQueenImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whiteQueenImage.getHeight()/2);
                         game.batch.draw(whiteQueenImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 10 == 6){
+                    else if(pPieceID == 6){
                         int adjustedTileX = tileX+(tileLength/2)-(whiteKingImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(whiteKingImage.getHeight()/2);
                         game.batch.draw(whiteKingImage,adjustedTileX,adjustedTileY);
                     }
                 }
                 else{
-                    if(tileID % 20 == 1){
+                    if(pPieceID == 1){
                         int adjustedTileX = tileX+(tileLength/2)-(blackPawnImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(blackPawnImage.getHeight()/2);
                         game.batch.draw(blackPawnImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 20 == 2){
+                    else if(pPieceID == 2){
                         int adjustedTileX = tileX+(tileLength/2)-(blackKnightImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(blackKnightImage.getHeight()/2);
                         game.batch.draw(blackKnightImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 20 == 3){
+                    else if(pPieceID == 3){
                         int adjustedTileX = tileX+(tileLength/2)-(blackBishopImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(blackBishopImage.getHeight()/2);
                         game.batch.draw(blackBishopImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 20 == 4){
+                    else if(pPieceID == 4){
                         int adjustedTileX = tileX+(tileLength/2)-(blackRookImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(blackRookImage.getHeight()/2);
                         game.batch.draw(blackRookImage,adjustedTileX,adjustedTileY);
                     }
-                    else if(tileID % 20 == 5){
+                    else if(pPieceID == 5){
                         int adjustedTileX = tileX+(tileLength/2)-(blackQueenImage.getWidth()/2);
                         int adjustedTileY = tileY+(tileLength/2)-(blackQueenImage.getHeight()/2);
                         game.batch.draw(blackQueenImage,adjustedTileX,adjustedTileY);
