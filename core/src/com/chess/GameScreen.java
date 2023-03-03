@@ -15,7 +15,7 @@ public class GameScreen implements Screen {
     private static final int tileLength = 100, initialTileX = boardX-100, initialTileY = boardY+800;
     private static long startUpTime;
     Point selectedTile;
-    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage;
+    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage, smallWhitePawnImage, smallWhiteKnightImage, smallWhiteBishopImage, smallWhiteRookImage, smallWhiteQueenImage, smallBlackPawnImage, smallBlackKnightImage, smallBlackBishopImage, smallBlackRookImage, smallBlackQueenImage, promotionMenuImage;
     final Chess game;
     Board chessboard = new Board();
     OrthographicCamera camera;
@@ -39,6 +39,17 @@ public class GameScreen implements Screen {
         blackQueenImage = new Texture("black_queen.png");
         blackKingImage = new Texture("black_king.png");
         selectedTileImage = new Texture("selected_tile.png");
+        smallWhitePawnImage = new Texture("small_white_pawn.png");
+        smallWhiteKnightImage = new Texture("small_white_knight.png");
+        smallWhiteBishopImage = new Texture("small_white_bishop.png");
+        smallWhiteRookImage = new Texture("small_white_rook.png");
+        smallWhiteQueenImage = new Texture("small_white_queen.png");
+        smallBlackPawnImage = new Texture("small_black_pawn.png");
+        smallBlackKnightImage = new Texture("small_black_knight.png");
+        smallBlackBishopImage = new Texture("small_black_bishop.png");
+        smallBlackRookImage = new Texture("small_black_rook.png");
+        smallBlackQueenImage = new Texture("small_black_queen.png");
+        promotionMenuImage = new Texture("promotion_menu.png");
 
         startUpTime = TimeUtils.nanoTime();
     }
@@ -162,6 +173,16 @@ public class GameScreen implements Screen {
 
             chessboard.selectTile(selectY,selectX);
         }
+
+        //render promotion menu
+        if(chessboard.getToBePromoted() != null){
+            Point target = chessboard.getToBePromoted();
+            int menuX = (target.y*100)+boardX, menuY = boardLength+boardY-(target.x*100);
+
+            game.batch.draw(promotionMenuImage,menuX,menuY);
+        }
+
+        //handle user input on promotion menu
 
         game.batch.end();
     }

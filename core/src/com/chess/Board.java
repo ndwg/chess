@@ -4,12 +4,13 @@ import java.awt.*;
 
 public class Board {
     private Piece[][] gameBoard;
-    private Point selectedTile;
+    private Point selectedTile, toBePromoted;
     private Move lastMove;
     public Board(){
         gameBoard = new Piece[8][8];
         selectedTile = new Point(1000,1000);
         lastMove = new Move(null,0,0);
+        toBePromoted = null;
         setBoard();
     }
 
@@ -59,6 +60,8 @@ public class Board {
         return lastMove;
     }
 
+    public Point getToBePromoted(){return toBePromoted;}
+
     private void updateBoard(int row, int col){
         boolean updateApproved;
         Piece p = getTile(selectedTile.x,selectedTile.y);
@@ -73,9 +76,18 @@ public class Board {
             selectedTile.setLocation(1000,1000);
         }
         else selectedTile.setLocation(row,col);
+
+        checkPromotion();
     }
 
     public void enPassantCleanUp(int row, int col){
         gameBoard[row][col] = null;
+    }
+
+    private void checkPromotion(){
+        for(int i = 0; i < 8; i++){
+            if(gameBoard[0][i].getPieceID() == 1) toBePromoted = new Point(0,i);
+            else if(gameBoard[7][i].getPieceID() == 1) toBePromoted = new Point(7,i);
+        }
     }
 }
