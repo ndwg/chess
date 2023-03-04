@@ -86,8 +86,8 @@ public class Board {
 
     private void checkPromotion(){
         for(int i = 0; i < 8; i++){
-            if(gameBoard[0][i].getPieceID() == 1) toBePromoted = new Point(0,i);
-            else if(gameBoard[7][i].getPieceID() == 1) toBePromoted = new Point(7,i);
+            if(gameBoard[0][i] != null && gameBoard[0][i].getPieceID() == 1) toBePromoted = new Point(0,i);
+            else if(gameBoard[7][i] != null && gameBoard[7][i].getPieceID() == 1) toBePromoted = new Point(7,i);
         }
     }
 }
