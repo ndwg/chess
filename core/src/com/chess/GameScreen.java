@@ -14,6 +14,8 @@ public class GameScreen implements Screen {
     private static final int boardLength = 800, boardX = (Gdx.graphics.getWidth()/2)-400, boardY = (Gdx.graphics.getHeight()/2)-400;
     private static final int tileLength = 100, initialTileX = boardX-100, initialTileY = boardY+800;
     private static long startUpTime;
+    boolean promotionLock = false;
+    int menuX, menuY;
     Point selectedTile;
     Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage, smallWhitePawnImage, smallWhiteKnightImage, smallWhiteBishopImage, smallWhiteRookImage, smallWhiteQueenImage, smallBlackPawnImage, smallBlackKnightImage, smallBlackBishopImage, smallBlackRookImage, smallBlackQueenImage, promotionMenuImage;
     final Chess game;
@@ -165,7 +167,7 @@ public class GameScreen implements Screen {
         }
 
         //handle user input on board
-        if(Gdx.input.getX() > boardX && Gdx.input.getX() < boardX + boardLength && Gdx.input.getY() > boardY && Gdx.input.getY() < boardY + boardLength && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000){
+        if(!promotionLock && Gdx.input.getX() > boardX && Gdx.input.getX() < boardX + boardLength && Gdx.input.getY() > boardY && Gdx.input.getY() < boardY + boardLength && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000){
             startUpTime = TimeUtils.nanoTime();
 
             int selectX = (Gdx.input.getX()-boardX)/100;
@@ -177,12 +179,53 @@ public class GameScreen implements Screen {
         //render promotion menu
         if(chessboard.getToBePromoted() != null){
             Point target = chessboard.getToBePromoted();
-            int menuX = (target.y*100)+boardX, menuY = boardLength+boardY-(target.x*100);
+            menuX = (target.y*100)+boardX;
+            menuY = boardLength+boardY-(target.x*100);
 
             game.batch.draw(promotionMenuImage,menuX,menuY);
+
+            if(chessboard.getTile(target.x,target.y).getPlayerID() == 1){
+                game.batch.draw(smallWhiteKnightImage,menuX+5,menuY+4);
+                game.batch.draw(smallWhiteBishopImage,menuX+32,menuY+4);
+                game.batch.draw(smallWhiteRookImage,menuX+63,menuY+5);
+                game.batch.draw(smallWhiteQueenImage,menuX+86,menuY+4);
+            }
+            else {
+                game.batch.draw(smallBlackKnightImage,menuX+5,menuY+4);
+                game.batch.draw(smallBlackBishopImage,menuX+32,menuY+4);
+                game.batch.draw(smallBlackRookImage,menuX+63,menuY+5);
+                game.batch.draw(smallBlackQueenImage,menuX+86,menuY+4);
+            }
+
+            promotionLock = true;
         }
 
         //handle user input on promotion menu
+        if(promotionLock) {
+            if (Gdx.input.getX() > menuX + 5 && Gdx.input.getX() < menuX + 5 + 22 && Gdx.graphics.getHeight()-Gdx.input.getY() > menuY + 4 && Gdx.graphics.getHeight()-Gdx.input.getY() < menuY + 4 + 22 && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000) {
+                startUpTime = TimeUtils.nanoTime();
+                chessboard.promoteToKnight();
+                promotionLock = false;
+            }
+
+            else if (Gdx.input.getX() > menuX + 32 && Gdx.input.getX() < menuX + 32 + 22 && Gdx.graphics.getHeight()-Gdx.input.getY() > menuY + 4 && Gdx.graphics.getHeight()-Gdx.input.getY() < menuY + 4 + 23 && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000) {
+                startUpTime = TimeUtils.nanoTime();
+                chessboard.promoteToBishop();
+                promotionLock = false;
+            }
+
+            else if (Gdx.input.getX() > menuX + 63 && Gdx.input.getX() < menuX + 63 + 18 && Gdx.graphics.getHeight()-Gdx.input.getY() > menuY + 5 && Gdx.graphics.getHeight()-Gdx.input.getY() < menuY + 5 + 20 && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000) {
+                startUpTime = TimeUtils.nanoTime();
+                chessboard.promoteToRook();
+                promotionLock = false;
+            }
+
+            else if (Gdx.input.getX() > menuX + 86 && Gdx.input.getX() < menuX + 86 + 25 && Gdx.graphics.getHeight()-Gdx.input.getY() > menuY + 4 && Gdx.graphics.getHeight()-Gdx.input.getY() < menuY + 4 + 23 && Gdx.input.isTouched() && TimeUtils.nanoTime() - startUpTime > 250000000) {
+                startUpTime = TimeUtils.nanoTime();
+                chessboard.promoteToQueen();
+                promotionLock = false;
+            }
+        }
 
         game.batch.end();
     }

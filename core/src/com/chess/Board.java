@@ -62,6 +62,26 @@ public class Board {
 
     public Point getToBePromoted(){return toBePromoted;}
 
+    public void promoteToKnight(){
+        gameBoard[toBePromoted.x][toBePromoted.y] = new Knight(gameBoard[toBePromoted.x][toBePromoted.y].getPlayerID());
+        toBePromoted = null;
+    }
+
+    public void promoteToBishop(){
+        gameBoard[toBePromoted.x][toBePromoted.y] = new Bishop(gameBoard[toBePromoted.x][toBePromoted.y].getPlayerID());
+        toBePromoted = null;
+    }
+
+    public void promoteToRook(){
+        gameBoard[toBePromoted.x][toBePromoted.y] = new Rook(gameBoard[toBePromoted.x][toBePromoted.y].getPlayerID());
+        toBePromoted = null;
+    }
+
+    public void promoteToQueen(){
+        gameBoard[toBePromoted.x][toBePromoted.y] = new Queen(gameBoard[toBePromoted.x][toBePromoted.y].getPlayerID());
+        toBePromoted = null;
+    }
+
     private void updateBoard(int row, int col){
         boolean updateApproved;
         Piece p = getTile(selectedTile.x,selectedTile.y);
