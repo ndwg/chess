@@ -88,7 +88,7 @@ public class Board {
         if(p.isValidMove(row,col, selectedTile.x, selectedTile.y,this) && checkReverseCheck(row,col)){
             lastMove = new Move(p,Math.abs(row-selectedTile.x),Math.abs(col-selectedTile.y));
 
-            if(p.getPieceID() == 1) p.setHasMoved();
+            if(p.getPieceID() == 1 || p.getPieceID() == 4 || p.getPieceID() == 6) p.setHasMoved();
 
             gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
             gameBoard[selectedTile.x][selectedTile.y] = null;
@@ -109,15 +109,6 @@ public class Board {
             else if(gameBoard[7][i] != null && gameBoard[7][i].getPieceID() == 1) toBePromoted = new Point(7,i);
         }
     }
-
-    /*private Point locateKing(int pID){
-        for(int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if(gameBoard[i][j].getPieceID() == 6 && gameBoard[i][j].getPlayerID() == pID) return new Point(i,j);
-            }
-        }
-        return null;
-    }*/
 
     private boolean checkReverseCheck(int row, int col){
         Piece p = getTile(selectedTile.x,selectedTile.y);
@@ -166,5 +157,28 @@ public class Board {
         }
 
         return true;
+    }
+
+    public void castlingCleanUp(int row, int col){
+        if(col > 4){
+            gameBoard[row][6] = gameBoard[row][4];
+            gameBoard[row][5] = gameBoard[row][7];
+            gameBoard[row][7] = null;
+            gameBoard[row][4] = null;
+
+            gameBoard[row][6].setHasMoved();
+            gameBoard[row][5].setHasMoved();
+        }
+        else{
+            gameBoard[row][2] = gameBoard[row][4];
+            gameBoard[row][3] = gameBoard[row][0];
+            gameBoard[row][0] = null;
+            gameBoard[row][4] = null;
+
+            gameBoard[row][2].setHasMoved();
+            gameBoard[row][3].setHasMoved();
+        }
+
+        selectedTile.setLocation(1000,1000);
     }
 }

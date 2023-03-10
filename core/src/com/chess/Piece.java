@@ -26,4 +26,5 @@ public class Piece {
         return false;
     }
     public void setHasMoved(){}
+    public boolean getHasMoved(){return true;}
 }

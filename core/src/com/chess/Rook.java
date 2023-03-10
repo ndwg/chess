@@ -3,9 +3,11 @@ package com.chess;
 import java.awt.*;
 
 public class Rook extends Piece{
+    private boolean hasMoved;
 
     public Rook(int player) {
         super(player,4);
+        hasMoved = false;
     }
 
     @Override
@@ -62,4 +64,10 @@ public class Rook extends Piece{
         }
         return false;
     }
+
+    public void setHasMoved(){
+        hasMoved = true;
+    }
+
+    public boolean getHasMoved(){return hasMoved;}
 }
