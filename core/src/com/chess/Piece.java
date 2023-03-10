@@ -19,7 +19,11 @@ public class Piece {
         return pieceID;
     }
 
-    public boolean isValidMove(int row, int col, Piece piece, Board board){
+    public boolean isValidMove(int row, int col, int pieceX, int pieceY, Board board){
         return false;
     }
+    public boolean isValidMoveModified(int row, int col, int pieceX, int pieceY, Board board){
+        return false;
+    }
+    public void setHasMoved(){}
 }

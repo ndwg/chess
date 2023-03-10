@@ -9,91 +9,90 @@ public class Queen extends Piece{
     }
 
     @Override
-    public boolean isValidMove(int row, int col, Piece piece, Board board) {
+    public boolean isValidMove(int row, int col, int pieceX, int pieceY, Board board) {
         Piece[][] gameBoard = board.getGameBoard();
-        Point selectedTile = board.getSelectedTile();
 
-        if(piece.getPlayerID()==2){
-            if((row == selectedTile.x || col == selectedTile.y) && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 1)) {
-                if(row < selectedTile.x) row++;
-                else if(row > selectedTile.x) row--;
-                else if(col < selectedTile.y) col++;
+        if(gameBoard[pieceX][pieceY].getPlayerID()==2){
+            if((row == pieceX || col == pieceY) && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 1)) {
+                if(row < pieceX) row++;
+                else if(row > pieceX) row--;
+                else if(col < pieceY) col++;
                 else col--;
 
-                while(row != selectedTile.x){
+                while(row != pieceX){
                     if(gameBoard[row][col] != null) return false;
 
-                    if(row < selectedTile.x) row++;
+                    if(row < pieceX) row++;
                     else row--;
 
                 }
 
-                while(col != selectedTile.y){
+                while(col != pieceY){
                     if(gameBoard[row][col] != null) return false;
 
-                    else if(col < selectedTile.y) col++;
+                    else if(col < pieceY) col++;
                     else col--;
                 }
                 return true;
             }
-            else if(Math.abs(row-selectedTile.x)==Math.abs(col-selectedTile.y)
+            else if(Math.abs(row-pieceX)==Math.abs(col-pieceY)
                     && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 1)) {
-                if(row < selectedTile.x) row++;
+                if(row < pieceX) row++;
                 else row--;
 
-                if(col < selectedTile.y) col++;
+                if(col < pieceY) col++;
                 else col--;
 
-                while(row != selectedTile.x){
+                while(row != pieceX){
                     if(gameBoard[row][col] != null) return false;
 
-                    if(row < selectedTile.x) row++;
+                    if(row < pieceX) row++;
                     else row--;
 
-                    if(col < selectedTile.y) col++;
+                    if(col < pieceY) col++;
                     else col--;
                 }
                 return true;
             }
         }
         else{
-            if((row == selectedTile.x || col == selectedTile.y) && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 2)) {
-                if(row < selectedTile.x) row++;
-                else if(row > selectedTile.x) row--;
-                else if(col < selectedTile.y) col++;
+            if((row == pieceX || col == pieceY) && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 2)) {
+                if(row < pieceX) row++;
+                else if(row > pieceX) row--;
+                else if(col < pieceY) col++;
                 else col--;
 
-                while(row != selectedTile.x){
+                while(row != pieceX){
                     if(gameBoard[row][col] != null) return false;
 
-                    if(row < selectedTile.x) row++;
+                    if(row < pieceX) row++;
                     else row--;
 
                 }
 
-                while(col != selectedTile.y){
+                while(col != pieceY){
                     if(gameBoard[row][col] != null) return false;
 
-                    else if(col < selectedTile.y) col++;
+                    else if(col < pieceY) col++;
                     else col--;
                 }
                 return true;
             }
-            else if(Math.abs(row-selectedTile.x)==Math.abs(col-selectedTile.y)
+            else if(Math.abs(row-pieceX)==Math.abs(col-pieceY)
                     && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 2)) {
-                if(row < selectedTile.x) row++;
+                if(row < pieceX) row++;
                 else row--;
 
-                if(col < selectedTile.y) col++;
+                if(col < pieceY) col++;
                 else col--;
 
-                while(row != selectedTile.x){
+                while(row != pieceX){
                     if(gameBoard[row][col] != null) return false;
 
-                    if(row < selectedTile.x) row++;
+                    if(row < pieceX) row++;
                     else row--;
 
-                    if(col < selectedTile.y) col++;
+                    if(col < pieceY) col++;
                     else col--;
                 }
                 return true;

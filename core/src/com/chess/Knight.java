@@ -9,23 +9,22 @@ public class Knight extends Piece{
     }
 
     @Override
-    public boolean isValidMove(int row, int col, Piece piece, Board board){
+    public boolean isValidMove(int row, int col, int pieceX, int pieceY, Board board){
         Piece[][] gameBoard = board.getGameBoard();
-        Point selectedTile = board.getSelectedTile();
 
-        if(piece.getPlayerID()==2){
-            if(((row == selectedTile.x-2 && Math.abs(col-selectedTile.y) == 1)
-                    || (row == selectedTile.x-1 && Math.abs(col-selectedTile.y) == 2)
-                    || (row == selectedTile.x+1 && Math.abs(col-selectedTile.y) == 2)
-                    || (row == selectedTile.x+2 && Math.abs(col-selectedTile.y) == 1))
+        if(gameBoard[pieceX][pieceY].getPlayerID()==2){
+            if(((row == pieceX-2 && Math.abs(col-pieceY) == 1)
+                    || (row == pieceX-1 && Math.abs(col-pieceY) == 2)
+                    || (row == pieceX+1 && Math.abs(col-pieceY) == 2)
+                    || (row == pieceX+2 && Math.abs(col-pieceY) == 1))
                     && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 1))
                 return true;
         }
         else{
-            if(((row == selectedTile.x-2 && Math.abs(col-selectedTile.y) == 1)
-                    || (row == selectedTile.x-1 && Math.abs(col-selectedTile.y) == 2)
-                    || (row == selectedTile.x+1 && Math.abs(col-selectedTile.y) == 2)
-                    || (row == selectedTile.x+2 && Math.abs(col-selectedTile.y) == 1))
+            if(((row == pieceX-2 && Math.abs(col-pieceY) == 1)
+                    || (row == pieceX-1 && Math.abs(col-pieceY) == 2)
+                    || (row == pieceX+1 && Math.abs(col-pieceY) == 2)
+                    || (row == pieceX+2 && Math.abs(col-pieceY) == 1))
                     && (gameBoard[row][col] == null || gameBoard[row][col].getPlayerID() == 2))
                 return true;
         }

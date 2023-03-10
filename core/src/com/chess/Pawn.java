@@ -11,52 +11,49 @@ public class Pawn extends Piece{
     }
 
     @Override
-    public boolean isValidMove(int row, int col, Piece piece, Board board){
+    public boolean isValidMove(int row, int col, int pieceX, int pieceY, Board board){
         Piece[][] gameBoard = board.getGameBoard();
-        Point selectedTile = board.getSelectedTile();
         Move lastMove = board.getLastMove();
 
-        if(piece.getPlayerID()==2){
+        if(gameBoard[pieceX][pieceY].getPlayerID()==2){
             if(lastMove.getPiece() != null && lastMove.getPiece().getPieceID() == 1 && lastMove.getPiece().getPlayerID() != 2 && gameBoard[row+1][col] == lastMove.getPiece() && lastMove.getRowDelta() == 2
-                    && Math.abs(col-selectedTile.y) == 1 && row == selectedTile.x-1){
+                    && Math.abs(col-pieceY) == 1 && row == pieceX-1){
                 board.enPassantCleanUp(row+1,col);
                 return true;
             }
-            else if(row == selectedTile.x-2 && col == selectedTile.y && gameBoard[row][col] == null && !hasMoved) {
-                hasMoved = true;
+            else if(row == pieceX-2 && col == pieceY && gameBoard[row][col] == null && !hasMoved) {
                 return true;
             }
-            else if(row == selectedTile.x-1 && col == selectedTile.y && gameBoard[row][col] == null) {
-                hasMoved = true;
+            else if(row == pieceX-1 && col == pieceY && gameBoard[row][col] == null) {
                 return true;
             }
             else if(gameBoard[row][col] == null) return false;
-            else if((col == selectedTile.y+1 || col == selectedTile.y-1) && row == selectedTile.x-1 && gameBoard[row][col].getPlayerID() == 1) {
-                hasMoved = true;
+            else if((col == pieceY+1 || col == pieceY-1) && row == pieceX-1 && gameBoard[row][col].getPlayerID() == 1) {
                 return true;
             }
         }
         else{
             if(lastMove.getPiece() != null && lastMove.getPiece().getPieceID() == 1 && lastMove.getPiece().getPlayerID() != 1 && gameBoard[row-1][col] == lastMove.getPiece() && lastMove.getRowDelta() == 2
-                    && Math.abs(col-selectedTile.y) == 1 && row == selectedTile.x+1){
+                    && Math.abs(col-pieceY) == 1 && row == pieceX+1){
                 board.enPassantCleanUp(row-1,col);
                 return true;
             }
-            else if(row == selectedTile.x+2 && col == selectedTile.y && gameBoard[row][col] == null && !hasMoved) {
-                hasMoved = true;
+            else if(row == pieceX+2 && col == pieceY && gameBoard[row][col] == null && !hasMoved) {
                 return true;
             }
-            else if(row == selectedTile.x+1 && col == selectedTile.y && gameBoard[row][col] == null) {
-                hasMoved = true;
+            else if(row == pieceX+1 && col == pieceY && gameBoard[row][col] == null) {
                 return true;
             }
             else if(gameBoard[row][col] == null) return false;
-            else if((col == selectedTile.y+1 || col == selectedTile.y-1) && row == selectedTile.x+1 && gameBoard[row][col].getPlayerID() == 2) {
-                hasMoved = true;
+            else if((col == pieceY+1 || col == pieceY-1) && row == pieceX+1 && gameBoard[row][col].getPlayerID() == 2) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public void setHasMoved(){
+        hasMoved = true;
     }
 }

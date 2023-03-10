@@ -83,13 +83,12 @@ public class Board {
     }
 
     private void updateBoard(int row, int col){
-        boolean updateApproved;
         Piece p = getTile(selectedTile.x,selectedTile.y);
 
-        updateApproved = p.isValidMove(row,col,p,this);
-
-        if(updateApproved){
+        if(p.isValidMove(row,col, selectedTile.x, selectedTile.y,this) && checkReverseCheck(row,col)){
             lastMove = new Move(p,Math.abs(row-selectedTile.x),Math.abs(col-selectedTile.y));
+
+            if(p.getPieceID() == 1) p.setHasMoved();
 
             gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
             gameBoard[selectedTile.x][selectedTile.y] = null;
@@ -109,5 +108,63 @@ public class Board {
             if(gameBoard[0][i] != null && gameBoard[0][i].getPieceID() == 1) toBePromoted = new Point(0,i);
             else if(gameBoard[7][i] != null && gameBoard[7][i].getPieceID() == 1) toBePromoted = new Point(7,i);
         }
+    }
+
+    /*private Point locateKing(int pID){
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(gameBoard[i][j].getPieceID() == 6 && gameBoard[i][j].getPlayerID() == pID) return new Point(i,j);
+            }
+        }
+        return null;
+    }*/
+
+    private boolean checkReverseCheck(int row, int col){
+        Piece p = getTile(selectedTile.x,selectedTile.y);
+        Piece[][] holdBoard = new Piece[8][8];
+        Point kingCoordinates = null;
+        int opponentID;
+
+        if(p.getPieceID() == 6) return true;
+
+        if(p.getPlayerID() == 2) opponentID = 1;
+        else opponentID = 2;
+
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                holdBoard[i][j] = gameBoard[i][j];
+                if(gameBoard[i][j] != null && gameBoard[i][j].getPieceID() == 6 && gameBoard[i][j].getPlayerID() == p.getPlayerID()) kingCoordinates = new Point(i,j);
+            }
+        }
+
+        gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
+        gameBoard[selectedTile.x][selectedTile.y] = null;
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(gameBoard[i][j] != null && gameBoard[i][j].getPlayerID() == opponentID){
+                    if(gameBoard[i][j].getPieceID() == 6){
+                        if(gameBoard[i][j].isValidMoveModified(kingCoordinates.x, kingCoordinates.y, i,j,this)) {
+                            for(int k = 0; k < 8; k++) {
+                                System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+                            }
+                            return false;
+                        }
+                    }
+                    else if(gameBoard[i][j].isValidMove(kingCoordinates.x, kingCoordinates.y,i,j,this)) {
+                        for(int k = 0; k < 8; k++) {
+                            System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        for(int k = 0; k < 8; k++) {
+            System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+        }
+
+        return true;
     }
 }
