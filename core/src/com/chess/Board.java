@@ -159,8 +159,57 @@ public class Board {
         return true;
     }
 
+    private boolean checkReverseCheckModified(int row, int col){
+        Piece p = getTile(selectedTile.x,selectedTile.y);
+        Piece[][] holdBoard = new Piece[8][8];
+        Point kingCoordinates = new Point(row,6);
+        int opponentID;
+
+        if(p.getPlayerID() == 2) opponentID = 1;
+        else opponentID = 2;
+
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                holdBoard[i][j] = gameBoard[i][j];
+            }
+        }
+
+        gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
+        gameBoard[selectedTile.x][selectedTile.y] = null;
+
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(gameBoard[i][j] != null && gameBoard[i][j].getPlayerID() == opponentID){
+                    if(gameBoard[i][j].getPieceID() == 6){
+                        if(gameBoard[i][j].isValidMoveModified(kingCoordinates.x, kingCoordinates.y, i,j,this)) {
+                            for(int k = 0; k < 8; k++) {
+                                System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+                            }
+                            return false;
+                        }
+                    }
+                    else if(gameBoard[i][j].isValidMove(kingCoordinates.x, kingCoordinates.y,i,j,this)) {
+                        for(int k = 0; k < 8; k++) {
+                            System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+                        }
+                        return false;
+                    }
+                }
+            }
+        }
+
+        for(int k = 0; k < 8; k++) {
+            System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+        }
+
+        return true;
+    }
+
     public void castlingCleanUp(int row, int col){
+
         if(col > 4){
+            if(!checkReverseCheckModified(row,6)) return;
+
             gameBoard[row][6] = gameBoard[row][4];
             gameBoard[row][5] = gameBoard[row][7];
             gameBoard[row][7] = null;
@@ -168,8 +217,12 @@ public class Board {
 
             gameBoard[row][6].setHasMoved();
             gameBoard[row][5].setHasMoved();
+
+            selectedTile.setLocation(1000,1000);
         }
         else{
+            if(!checkReverseCheckModified(row,2)) return;
+
             gameBoard[row][2] = gameBoard[row][4];
             gameBoard[row][3] = gameBoard[row][0];
             gameBoard[row][0] = null;
@@ -177,8 +230,8 @@ public class Board {
 
             gameBoard[row][2].setHasMoved();
             gameBoard[row][3].setHasMoved();
-        }
 
-        selectedTile.setLocation(1000,1000);
+            selectedTile.setLocation(1000,1000);
+        }
     }
 }
