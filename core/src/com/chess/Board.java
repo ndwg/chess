@@ -6,11 +6,15 @@ public class Board {
     private Piece[][] gameBoard;
     private Point selectedTile, toBePromoted;
     private Move lastMove;
+    private boolean checkStatus;
+
     public Board(){
         gameBoard = new Piece[8][8];
         selectedTile = new Point(1000,1000);
         lastMove = new Move(null,0,0);
         toBePromoted = null;
+        checkStatus = false;
+
         setBoard();
     }
 
@@ -97,6 +101,7 @@ public class Board {
         else selectedTile.setLocation(row,col);
 
         checkPromotion();
+        if(checkStatus) checkMate();
     }
 
     public void enPassantCleanUp(int row, int col){
@@ -139,6 +144,7 @@ public class Board {
                             for(int k = 0; k < 8; k++) {
                                 System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                             }
+                            checkStatus = true;
                             return false;
                         }
                     }
@@ -146,6 +152,7 @@ public class Board {
                         for(int k = 0; k < 8; k++) {
                             System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                         }
+                        checkStatus = true;
                         return false;
                     }
                 }
@@ -185,6 +192,7 @@ public class Board {
                             for(int k = 0; k < 8; k++) {
                                 System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                             }
+                            checkStatus = true;
                             return false;
                         }
                     }
@@ -192,6 +200,7 @@ public class Board {
                         for(int k = 0; k < 8; k++) {
                             System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                         }
+                        checkStatus = true;
                         return false;
                     }
                 }
@@ -233,5 +242,13 @@ public class Board {
 
             selectedTile.setLocation(1000,1000);
         }
+    }
+
+    private void checkMate(){
+        //check if king is in check
+        checkStatus = false;
+        return;
+        //check if king can move away from check
+        //check if another piece can help
     }
 }
