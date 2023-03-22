@@ -6,7 +6,7 @@ public class Board {
     private Piece[][] gameBoard;
     private Point selectedTile, toBePromoted;
     private Move lastMove;
-    private boolean checkStatus;
+    private boolean checkStatus, gameStatus;
 
     public Board(){
         gameBoard = new Piece[8][8];
@@ -14,6 +14,7 @@ public class Board {
         lastMove = new Move(null,0,0);
         toBePromoted = null;
         checkStatus = false;
+        gameStatus = true;
 
         setBoard();
     }
@@ -51,6 +52,8 @@ public class Board {
     }
 
     public void selectTile(int row, int col){
+        if(!gameStatus) return;
+
         if(row == selectedTile.x && col == selectedTile.y) selectedTile.setLocation(1000,1000);
         else if(selectedTile.x != 1000 && gameBoard[selectedTile.x][selectedTile.y] != null) updateBoard(row,col);
         else selectedTile.setLocation(row,col);
@@ -245,10 +248,79 @@ public class Board {
     }
 
     private void checkMate(){
+
+        //try checking if player can make any valid moves
+
+        int whiteKingY, whiteKingX, blackKingY, blackKingX;
+        boolean whiteCheck = false, blackCheck = false;
+        Piece[][] holdBoard = new Piece[8][8];
+
         //check if king is in check
-        checkStatus = false;
-        return;
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                holdBoard[i][j] = gameBoard[i][j];
+
+                if(gameBoard[i][j] != null && gameBoard[i][j].getPieceID() == 6){
+                    if(gameBoard[i][j].getPlayerID() == 1){
+                        whiteKingY = i;
+                        whiteKingX = j;
+                    }
+                    else{
+                        blackKingY = i;
+                        blackKingX = j;
+                    }
+
+                    gameBoard[i][j] = null;
+                }
+            }
+        }
+
+        for(int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if(whiteCheck || blackCheck) break;
+
+                if(gameBoard[i][j] != null && gameBoard[i][j].getPieceID() != 6){
+                    if(gameBoard[i][j].getPlayerID() == 1){
+                        if(){
+                        }
+                        if(gameBoard[i][j].isValidMove(blackKingY, blackKingX,i,j,this)){
+                            blackCheck = true;
+                        }
+                    }
+                    else{
+                        if((Math.abs(i-whiteKingY) <= 1 && Math.abs(j-whiteKingX) <= 1)
+                                && (gameBoard[i][j] == null || gameBoard[i][j].getPlayerID() == 1)){}
+                        if(gameBoard[i][j].isValidMove(whiteKingY, whiteKingX,i,j,this)){
+                            whiteCheck = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        if(!whiteCheck && !blackCheck){
+            checkStatus = false;
+
+            for(int k = 0; k < 8; k++) {
+                System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
+            }
+
+            return;
+        }
+
+        //int whiteKingYAdjusted = whiteKingY-1, whiteKingXAdjusted = whiteKingX-1, whiteKingXAdjusted = whiteKingX-1, whiteKingXAdjusted = whiteKingX-1;
+
         //check if king can move away from check
+        if(whiteCheck){
+            for(int i = 0; i < 2; i++) {
+                for (int j = 0; j < 2; j++) {
+                    if(gameBoard[i][j].isValidMove())
+                }
+            }
+        }
+        else if(blackCheck){
+        }
+
         //check if another piece can help
     }
 }
