@@ -89,7 +89,7 @@ public class Board {
     private void updateBoard(int row, int col){
         Piece p = getTile(selectedTile.x,selectedTile.y);
 
-        if(p.isValidMove(row,col, selectedTile.x, selectedTile.y,this) && checkReverseCheck(row,col)){
+        if(p.isValidMove(row,col, selectedTile.x, selectedTile.y,this) && checkReverseCheck(row,col,selectedTile.x,selectedTile.y)){
             lastMove = new Move(p,Math.abs(row-selectedTile.x),Math.abs(col-selectedTile.y));
 
             if(p.getPieceID() == 1 || p.getPieceID() == 4 || p.getPieceID() == 6) p.setHasMoved();
@@ -101,7 +101,7 @@ public class Board {
         else selectedTile.setLocation(row,col);
 
         checkPromotion();
-        if(checkStatus) checkMate();
+        //if(checkStatus) checkMate(p.getPlayerID());//double check later if this works
     }
 
     public void enPassantCleanUp(int row, int col){
@@ -115,8 +115,8 @@ public class Board {
         }
     }
 
-    private boolean checkReverseCheck(int row, int col){
-        Piece p = getTile(selectedTile.x,selectedTile.y);
+    private boolean checkReverseCheck(int row, int col, int pRow, int pCol){
+        Piece p = getTile(pRow,pCol);
         Piece[][] holdBoard = new Piece[8][8];
         Point kingCoordinates = null;
         int opponentID;
@@ -133,8 +133,8 @@ public class Board {
             }
         }
 
-        gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
-        gameBoard[selectedTile.x][selectedTile.y] = null;
+        gameBoard[row][col] = gameBoard[pRow][pCol];
+        gameBoard[pRow][pCol] = null;
 
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -144,7 +144,7 @@ public class Board {
                             for(int k = 0; k < 8; k++) {
                                 System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                             }
-                            checkStatus = true;
+                            //checkStatus = true;
                             return false;
                         }
                     }
@@ -152,7 +152,7 @@ public class Board {
                         for(int k = 0; k < 8; k++) {
                             System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                         }
-                        checkStatus = true;
+                        //checkStatus = true;
                         return false;
                     }
                 }
@@ -166,8 +166,8 @@ public class Board {
         return true;
     }
 
-    private boolean checkReverseCheckModified(int row, int col){
-        Piece p = getTile(selectedTile.x,selectedTile.y);
+    private boolean checkReverseCheckModified(int row, int col, int pRow, int pCol){
+        Piece p = getTile(pRow,pCol);
         Piece[][] holdBoard = new Piece[8][8];
         Point kingCoordinates = new Point(row,6);
         int opponentID;
@@ -181,8 +181,8 @@ public class Board {
             }
         }
 
-        gameBoard[row][col] = gameBoard[selectedTile.x][selectedTile.y];
-        gameBoard[selectedTile.x][selectedTile.y] = null;
+        gameBoard[row][col] = gameBoard[pRow][pCol];
+        gameBoard[pRow][pCol] = null;
 
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
@@ -192,7 +192,7 @@ public class Board {
                             for(int k = 0; k < 8; k++) {
                                 System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                             }
-                            checkStatus = true;
+                            //checkStatus = true;
                             return false;
                         }
                     }
@@ -200,7 +200,7 @@ public class Board {
                         for(int k = 0; k < 8; k++) {
                             System.arraycopy(holdBoard[k], 0, gameBoard[k], 0, 8);
                         }
-                        checkStatus = true;
+                        //checkStatus = true;
                         return false;
                     }
                 }
@@ -217,7 +217,7 @@ public class Board {
     public void castlingCleanUp(int row, int col){
 
         if(col > 4){
-            if(!checkReverseCheckModified(row,6)) return;
+            if(!checkReverseCheckModified(row,6,selectedTile.x,selectedTile.y)) return;
 
             gameBoard[row][6] = gameBoard[row][4];
             gameBoard[row][5] = gameBoard[row][7];
@@ -230,7 +230,7 @@ public class Board {
             selectedTile.setLocation(1000,1000);
         }
         else{
-            if(!checkReverseCheckModified(row,2)) return;
+            if(!checkReverseCheckModified(row,2,selectedTile.x,selectedTile.y)) return;
 
             gameBoard[row][2] = gameBoard[row][4];
             gameBoard[row][3] = gameBoard[row][0];
@@ -244,11 +244,20 @@ public class Board {
         }
     }
 
-    private void checkMate(){
-        //check if king is in check
-        checkStatus = false;
-        return;
-        //check if king can move away from check
-        //check if another piece can help
+    private boolean checkMate(int playerID){
+        for(int i = 0; i < 8; i++){
+            for(int j = 0; j < 8; j++){
+                if(gameBoard[i][j] == null || gameBoard[i][j].getPlayerID() == playerID) continue;
+
+                if(gameBoard[i][j].getPieceID() == 1){}
+                else if(gameBoard[i][j].getPieceID() == 2){}
+                else if(gameBoard[i][j].getPieceID() == 3){}
+                else if(gameBoard[i][j].getPieceID() == 4){}
+                else if(gameBoard[i][j].getPieceID() == 5){}
+                else if(gameBoard[i][j].getPieceID() == 6){}
+            }
+        }
+
+        return true;
     }
 }
