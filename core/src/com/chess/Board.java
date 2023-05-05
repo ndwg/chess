@@ -101,6 +101,7 @@ public class Board {
         else selectedTile.setLocation(row,col);
 
         checkPromotion();
+        if(checkMate(p.getPlayerID())) gameBoard[0][0] = new Piece(1,6);
         //if(checkStatus) checkMate(p.getPlayerID());//double check later if this works
     }
 
@@ -169,7 +170,7 @@ public class Board {
     private boolean checkReverseCheckModified(int row, int col, int pRow, int pCol){
         Piece p = getTile(pRow,pCol);
         Piece[][] holdBoard = new Piece[8][8];
-        Point kingCoordinates = new Point(row,6);
+        Point kingCoordinates = new Point(row,col);
         int opponentID;
 
         if(p.getPlayerID() == 2) opponentID = 1;
@@ -244,17 +245,77 @@ public class Board {
         }
     }
 
-    private boolean checkMate(int playerID){
+    private boolean checkMate(int playerID){//make sure check reverse check doesnt send true for tiles with friendlies
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 if(gameBoard[i][j] == null || gameBoard[i][j].getPlayerID() == playerID) continue;
 
-                if(gameBoard[i][j].getPieceID() == 1){}
-                else if(gameBoard[i][j].getPieceID() == 2){}
-                else if(gameBoard[i][j].getPieceID() == 3){}
-                else if(gameBoard[i][j].getPieceID() == 4){}
-                else if(gameBoard[i][j].getPieceID() == 5){}
-                else if(gameBoard[i][j].getPieceID() == 6){}
+                if(gameBoard[i][j].getPieceID() == 1){
+                    if(gameBoard[i][j].getPlayerID() == 1){
+                        if(gameBoard[i][j].isValidMove(i+1,j-1,i,j,this) && checkReverseCheck(i+1,j-1,i,j)) return false;
+                        if(gameBoard[i][j].isValidMove(i+1,j+1,i,j,this) && checkReverseCheck(i+1,j+1,i,j)) return false;
+                        if(checkReverseCheck(i+1,j,i,j)) return false;
+                        if(!gameBoard[i][j].getHasMoved() && checkReverseCheck(i+2,j,i,j)) return false;
+                    }
+                    else{
+                        if(gameBoard[i][j].isValidMove(i-1,j-1,i,j,this) && checkReverseCheck(i-1,j-1,i,j)) return false;
+                        if(gameBoard[i][j].isValidMove(i-1,j+1,i,j,this) && checkReverseCheck(i-1,j+1,i,j)) return false;
+                        if(checkReverseCheck(i-1,j,i,j)) return false;
+                        if(!gameBoard[i][j].getHasMoved() && checkReverseCheck(i-2,j,i,j)) return false;
+                    }
+                }
+                else if(gameBoard[i][j].getPieceID() == 2){
+                    int row1 = i-2, row2 = i-1, row3 = i+1, row4 = i+2, col1 = j-2, col2 = j-1, col3 = j+1, col4 = j+2;
+
+                    if(row1 >= 0 && col2 >= 0 && checkReverseCheck(row1,col2,i,j)) return false;
+                    if(row1 >= 0 && col3 <= 7 && checkReverseCheck(row1,col3,i,j)) return false;
+                    if(row2 >= 0 && col1 >= 0 && checkReverseCheck(row2,col1,i,j)) return false;
+                    if(row2 >= 0 && col4 <= 7 && checkReverseCheck(row2,col4,i,j)) return false;
+                    if(row3 <= 7 && col1 >= 0 && checkReverseCheck(row3,col1,i,j)) return false;
+                    if(row3 <= 7 && col4 <= 7 && checkReverseCheck(row3,col4,i,j)) return false;
+                    if(row4 <= 7 && col2 >= 0 && checkReverseCheck(row4,col2,i,j)) return false;
+                    if(row4 <= 7 && col3 <= 7 && checkReverseCheck(row4,col3,i,j)) return false;
+                }
+                else if(gameBoard[i][j].getPieceID() == 3){
+                    int row1 = i-1, row2 = i+1, col1 = j-1, col2 = j+1;
+
+                    if(row1 >= 0 && col1 >= 0 && checkReverseCheck(row1,col1,i,j)) return false;
+                    if(row1 >= 0 && col2 <= 7 && checkReverseCheck(row1,col2,i,j)) return false;
+                    if(row2 <= 7 && col1 >= 0 && checkReverseCheck(row2,col1,i,j)) return false;
+                    if(row2 <= 7 && col2 <= 7 && checkReverseCheck(row2,col2,i,j)) return false;
+                }
+                else if(gameBoard[i][j].getPieceID() == 4){
+                    int row1 = i-1, row2 = i+1, col1 = j-1, col2 = j+1;
+
+                    if(row1 >= 0 && checkReverseCheck(row1,j,i,j)) return false;
+                    if(col1 >= 0 && checkReverseCheck(i,col1,i,j)) return false;
+                    if(col2 <= 7 && checkReverseCheck(i,col2,i,j)) return false;
+                    if(row2 <= 7 && checkReverseCheck(row2,j,i,j)) return false;
+                }
+                else if(gameBoard[i][j].getPieceID() == 5){
+                    int row1 = i-1, row2 = i+1, col1 = j-1, col2 = j+1;
+
+                    if(row1 >= 0 && col1 >= 0 && checkReverseCheck(row1,col1,i,j)) return false;
+                    if(row1 >= 0 && checkReverseCheck(row1,j,i,j)) return false;
+                    if(row1 >= 0 && col2 <= 7 && checkReverseCheck(row1,col2,i,j)) return false;
+                    if(col1 >= 0 && checkReverseCheck(i,col1,i,j)) return false;
+                    if(col2 <= 7 && checkReverseCheck(i,col2,i,j)) return false;
+                    if(row2 <= 7 && col1 >= 0 && checkReverseCheck(row2,col1,i,j)) return false;
+                    if(row2 <= 7 && checkReverseCheck(row2,j,i,j)) return false;
+                    if(row2 <= 7 && col2 <= 7 && checkReverseCheck(row2,col2,i,j)) return false;
+                }
+                else if(gameBoard[i][j].getPieceID() == 6){
+                    int row1 = i-1, row2 = i+1, col1 = j-1, col2 = j+1;
+
+                    if(row1 >= 0 && col1 >= 0 && gameBoard[i][j].isValidMove(row1,col1,i,j,this) && checkReverseCheckModified(row1,col1,i,j)) return false;
+                    if(row1 >= 0 && gameBoard[i][j].isValidMove(row1,j,i,j,this) && checkReverseCheckModified(row1,j,i,j)) return false;
+                    if(row1 >= 0 && gameBoard[i][j].isValidMove(row1,col2,i,j,this) && col2 <= 7 && checkReverseCheckModified(row1,col2,i,j)) return false;
+                    if(col1 >= 0 && gameBoard[i][j].isValidMove(i,col1,i,j,this) && checkReverseCheckModified(i,col1,i,j)) return false;
+                    if(col2 <= 7 && gameBoard[i][j].isValidMove(i,col2,i,j,this) && checkReverseCheckModified(i,col2,i,j)) return false;
+                    if(row2 <= 7 && gameBoard[i][j].isValidMove(row2,col1,i,j,this) && col1 >= 0 && checkReverseCheckModified(row2,col1,i,j)) return false;
+                    if(row2 <= 7 && gameBoard[i][j].isValidMove(row2,j,i,j,this) && checkReverseCheckModified(row2,j,i,j)) return false;
+                    if(row2 <= 7 && gameBoard[i][j].isValidMove(row2,col2,i,j,this) && col2 <= 7 && checkReverseCheckModified(row2,col2,i,j)) return false;
+                }
             }
         }
 
