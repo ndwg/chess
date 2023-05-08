@@ -6,14 +6,16 @@ public class Board {
     private Piece[][] gameBoard;
     private Point selectedTile, toBePromoted;
     private Move lastMove;
-    private boolean checkStatus;
+    private boolean gameStatus;
+    private int winner;
 
     public Board(){
         gameBoard = new Piece[8][8];
         selectedTile = new Point(1000,1000);
         lastMove = new Move(null,0,0);
         toBePromoted = null;
-        checkStatus = false;
+        gameStatus = true;
+        winner = -1;
 
         setBoard();
     }
@@ -51,6 +53,8 @@ public class Board {
     }
 
     public void selectTile(int row, int col){
+        if(!gameStatus) return;
+
         if(row == selectedTile.x && col == selectedTile.y) selectedTile.setLocation(1000,1000);
         else if(selectedTile.x != 1000 && gameBoard[selectedTile.x][selectedTile.y] != null) updateBoard(row,col);
         else selectedTile.setLocation(row,col);
@@ -65,6 +69,10 @@ public class Board {
     }
 
     public Point getToBePromoted(){return toBePromoted;}
+
+    public Boolean getGameStatus(){return gameStatus;}
+
+    public int getWinner(){return winner;}
 
     public void promoteToKnight(){
         gameBoard[toBePromoted.x][toBePromoted.y] = new Knight(gameBoard[toBePromoted.x][toBePromoted.y].getPlayerID());
@@ -87,6 +95,8 @@ public class Board {
     }
 
     private void updateBoard(int row, int col){
+        if(!gameStatus) return;
+
         Piece p = getTile(selectedTile.x,selectedTile.y);
 
         if(p.isValidMove(row,col, selectedTile.x, selectedTile.y,this) && checkReverseCheck(row,col,selectedTile.x,selectedTile.y)){
@@ -101,8 +111,10 @@ public class Board {
         else selectedTile.setLocation(row,col);
 
         checkPromotion();
-        if(checkMate(p.getPlayerID())) gameBoard[0][0] = new Piece(1,6);
-        //if(checkStatus) checkMate(p.getPlayerID());//double check later if this works
+        if(checkMate(p.getPlayerID())){
+            winner = p.getPlayerID();
+            gameStatus = false;
+        }
     }
 
     public void enPassantCleanUp(int row, int col){
@@ -245,7 +257,7 @@ public class Board {
         }
     }
 
-    private boolean checkMate(int playerID){//make sure check reverse check doesnt send true for tiles with friendlies
+    private boolean checkMate(int playerID){
         for(int i = 0; i < 8; i++){
             for(int j = 0; j < 8; j++){
                 if(gameBoard[i][j] == null || gameBoard[i][j].getPlayerID() == playerID) continue;

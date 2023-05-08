@@ -17,7 +17,7 @@ public class GameScreen implements Screen {
     boolean promotionLock = false;
     int menuX, menuY;
     Point selectedTile;
-    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage, smallWhitePawnImage, smallWhiteKnightImage, smallWhiteBishopImage, smallWhiteRookImage, smallWhiteQueenImage, smallBlackPawnImage, smallBlackKnightImage, smallBlackBishopImage, smallBlackRookImage, smallBlackQueenImage, promotionMenuImage;
+    Texture backImage, boardImage, whitePawnImage, whiteKnightImage, whiteBishopImage, whiteRookImage, whiteQueenImage, whiteKingImage, blackPawnImage, blackKnightImage, blackBishopImage, blackRookImage, blackQueenImage, blackKingImage, selectedTileImage, smallWhitePawnImage, smallWhiteKnightImage, smallWhiteBishopImage, smallWhiteRookImage, smallWhiteQueenImage, smallBlackPawnImage, smallBlackKnightImage, smallBlackBishopImage, smallBlackRookImage, smallBlackQueenImage, promotionMenuImage, endgameCardBlackImage, endgameCardWhiteImage, endgameBackImage, endgameRematchImage;
     final Chess game;
     Board chessboard = new Board();
     OrthographicCamera camera;
@@ -52,6 +52,10 @@ public class GameScreen implements Screen {
         smallBlackRookImage = new Texture("small_black_rook.png");
         smallBlackQueenImage = new Texture("small_black_queen.png");
         promotionMenuImage = new Texture("promotion_menu.png");
+        endgameCardBlackImage = new Texture("endgame_card_black.png");
+        endgameCardWhiteImage = new Texture("endgame_card_white.png");
+        endgameBackImage = new Texture("endgame_back.png");
+        endgameRematchImage = new Texture("endgame_rematch.png");
 
         startUpTime = TimeUtils.nanoTime();
     }
@@ -224,6 +228,28 @@ public class GameScreen implements Screen {
                 startUpTime = TimeUtils.nanoTime();
                 chessboard.promoteToQueen();
                 promotionLock = false;
+            }
+        }
+
+        //render game end card and handle user input on it
+        if(!chessboard.getGameStatus()){
+            menuX = 305;
+            menuY = 330;
+            if(chessboard.getWinner() == 1) game.batch.draw(endgameCardWhiteImage,menuX,menuY);
+            else game.batch.draw(endgameCardBlackImage,menuX,menuY);
+
+            game.batch.draw(endgameRematchImage,menuX+50,menuY+20);
+            game.batch.draw(endgameBackImage,menuX+200,menuY+20);
+
+            if(Gdx.graphics.getHeight() - Gdx.input.getY() > menuY+20 && Gdx.graphics.getHeight() - Gdx.input.getY() < menuY+70 && Gdx.input.isTouched()) {
+                if(Gdx.input.getX() > menuX+50 && Gdx.input.getX() < menuX+150){
+                    game.setScreen(new GameScreen(game));
+                    dispose();
+                }
+                else if(Gdx.input.getX() > menuX+200 && Gdx.input.getX() < menuX+300){
+                    game.setScreen(new MainMenuScreen(game));
+                    dispose();
+                }
             }
         }
 
